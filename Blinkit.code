@@ -1,0 +1,356 @@
+<div class="container">
+  <div class="overlay"></div>
+  
+  <div class="stopwatch-wrapper">
+    <div class="header">
+      <h1>Vintage Stopwatch</h1>
+      <p>Classic time measurement tool</p>
+    </div>
+
+    <div class="timer-card">
+      <div class="card-header">
+        <h2>⏰ Timer Display</h2>
+      </div>
+      <div class="card-content">
+        <div class="time-display" id="timeDisplay">00:00.00</div>
+        
+        <div class="controls">
+          <button id="startBtn" class="btn btn-start">▶ Start</button>
+          <button id="pauseBtn" class="btn btn-pause" style="display: none;">⏸ Pause</button>
+          <button id="resetBtn" class="btn btn-reset">↻ Reset</button>
+        </div>
+        
+        <button id="lapBtn" class="btn btn-lap" style="display: none;">Record Lap Time</button>
+      </div>
+    </div>
+
+    <div class="lap-card" id="lapCard" style="display: none;">
+      <div class="card-header">
+        <h3>Lap Times</h3>
+      </div>
+      <div class="card-content">
+        <div class="lap-list" id="lapList"></div>
+      </div>
+    </div>
+  </div>
+</div>
+ this my html file
+class VintageStopwatch {
+  constructor() {
+    this.time = 0
+    this.isRunning = false
+    this.lapTimes = []
+    this.interval = null
+
+    this.initializeElements()
+    this.bindEvents()
+  }
+
+  initializeElements() {
+    this.timeDisplay = document.getElementById("timeDisplay")
+    this.startBtn = document.getElementById("startBtn")
+    this.pauseBtn = document.getElementById("pauseBtn")
+    this.resetBtn = document.getElementById("resetBtn")
+    this.lapBtn = document.getElementById("lapBtn")
+    this.lapCard = document.getElementById("lapCard")
+    this.lapList = document.getElementById("lapList")
+  }
+
+  bindEvents() {
+    this.startBtn.addEventListener("click", () => this.start())
+    this.pauseBtn.addEventListener("click", () => this.pause())
+    this.resetBtn.addEventListener("click", () => this.reset())
+    this.lapBtn.addEventListener("click", () => this.recordLap())
+  }
+
+  formatTime(milliseconds) {
+    const totalSeconds = Math.floor(milliseconds / 1000)
+    const minutes = Math.floor(totalSeconds / 60)
+    const seconds = totalSeconds % 60
+    const ms = Math.floor((milliseconds % 1000) / 10)
+
+    return ${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}.${ms.toString().padStart(2, "0")}
+  }
+
+  updateDisplay() {
+    this.timeDisplay.textContent = this.formatTime(this.time)
+  }
+
+  start() {
+    this.isRunning = true
+    this.startBtn.style.display = "none"
+    this.pauseBtn.style.display = "flex"
+    this.lapBtn.style.display = "block"
+
+    this.interval = setInterval(() => {
+      this.time += 10
+      this.updateDisplay()
+    }, 10)
+  }
+
+  pause() {
+    this.isRunning = false
+    this.startBtn.style.display = "flex"
+    this.pauseBtn.style.display = "none"
+    this.lapBtn.style.display = "none"
+
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+  }
+
+  reset() {
+    this.isRunning = false
+    this.time = 0
+    this.lapTimes = []
+
+    this.startBtn.style.display = "flex"
+    this.pauseBtn.style.display = "none"
+    this.lapBtn.style.display = "none"
+    this.lapCard.style.display = "none"
+
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = null
+    }
+
+    this.updateDisplay()
+    this.updateLapDisplay()
+  }
+
+  recordLap() {
+    if (this.isRunning && this.time > 0) {
+      const lapTime = {
+        id: this.lapTimes.length + 1,
+        time: this.formatTime(this.time),
+        totalTime: this.time,
+      }
+
+      this.lapTimes.unshift(lapTime)
+      this.updateLapDisplay()
+      this.lapCard.style.display = "block"
+    }
+  }
+
+  updateLapDisplay() {
+    this.lapList.innerHTML = ""
+
+    this.lapTimes.forEach((lap) => {
+      const lapItem = document.createElement("div")
+      lapItem.className = "lap-item"
+
+      lapItem.innerHTML = 
+        <span class="lap-number">Lap ${lap.id}</span>
+        <span class="lap-time">${lap.time}</span>
+      
+
+      this.lapList.appendChild(lapItem)
+    })
+  }
+}
+
+// Initialize the stopwatch when the page loads
+document.addEventListener("DOMContentLoaded", () => {
+  new VintageStopwatch()
+}) 
+ this my css file 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Georgia", serif;
+  min-height: 100vh;
+  background-image:("WhatsApp Image 2025-09-19 at 21.35.16_241a2b60");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.container {
+  min-height: 100vh;
+  padding: 20px;
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(120, 53, 15, 0.2);
+  z-index: 1;
+}
+
+.stopwatch-wrapper {
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  text-align: center;
+  color: #fef3c7;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.header p {
+  color: rgba(254, 243, 199, 0.9);
+  font-size: 1rem;
+}
+
+.timer-card,
+.lap-card {
+  background-color: rgba(254, 243, 199, 0.9);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(217, 119, 6, 0.5);
+  border-radius: 12px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 20px 24px 16px;
+  text-align: center;
+  border-bottom: 1px solid rgba(217, 119, 6, 0.2);
+}
+
+.card-header h2 {
+  font-size: 1.5rem;
+  color: #78350f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.card-header h3 {
+  font-size: 1.125rem;
+  color: #78350f;
+}
+
+.card-content {
+  padding: 24px;
+}
+
+.time-display {
+  font-family: "Courier New", monospace;
+  font-size: 3.75rem;
+  font-weight: bold;
+  color: #92400e;
+  text-align: center;
+  margin-bottom: 32px;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.btn {
+  padding: 12px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-start,
+.btn-pause {
+  background-color: #b45309;
+  color: #fef3c7;
+}
+
+.btn-start:hover,
+.btn-pause:hover {
+  background-color: #92400e;
+}
+
+.btn-reset {
+  background-color: #fef3c7;
+  color: #78350f;
+  border: 1px solid #d97706;
+}
+
+.btn-reset:hover {
+  background-color: #fde68a;
+}
+
+.btn-lap {
+  width: 100%;
+  background-color: #fde68a;
+  color: #78350f;
+  border: 1px solid #f59e0b;
+}
+
+.btn-lap:hover {
+  background-color: #fcd34d;
+}
+
+.lap-list {
+  max-height: 256px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lap-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  background-color: rgba(254, 243, 199, 0.8);
+  border: 1px solid rgba(217, 119, 6, 0.5);
+  border-radius: 8px;
+}
+
+.lap-number {
+  font-weight: 600;
+  color: #92400e;
+}
+
+.lap-time {
+  font-family: "Courier New", monospace;
+  font-size: 1.125rem;
+  font-weight: bold;
+  color: #78350f;
+}
+
+@media (max-width: 480px) {
+  .time-display {
+    font-size: 2.5rem;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .btn {
+    width: 100%;
+    max-width: 200px;
+  }
+}
+ this my js file  can u link and give the codes again
