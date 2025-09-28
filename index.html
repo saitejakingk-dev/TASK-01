@@ -1,0 +1,86 @@
+# TASK-01
+Create an interactive navigation menu that changes color changes the backend and frontend
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blinkit - India's Last Minute App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-content">
+            <div class="logo">🛒 Blinkit</div>
+            <button class="cart-btn" onclick="toggleCart()">
+                Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>India's last minute app</h1>
+        <p>Get groceries, medicines & more delivered in 10 minutes</p>
+        <span class="delivery-badge">🚀 10-minute delivery</span>
+    </section>
+
+    <!-- Categories -->
+    <section class="categories">
+        <div class="categories-content">
+            <button class="category-btn active" onclick="filterProducts('All')">All</button>
+            <button class="category-btn" onclick="filterProducts('Vegetables & Fruits')">Vegetables & Fruits</button>
+            <button class="category-btn" onclick="filterProducts('Dairy & Breakfast')">Dairy & Breakfast</button>
+            <button class="category-btn" onclick="filterProducts('Munchies')">Munchies</button>
+            <button class="category-btn" onclick="filterProducts('Cold Drinks')">Cold Drinks</button>
+        </div>
+    </section>
+
+    <!-- Products -->
+    <section class="products-section">
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be dynamically generated -->
+        </div>
+    </section>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay">
+        <div class="cart-sidebar">
+            <div class="cart-header">
+                <h3>Your Cart</h3>
+                <button class="close-btn" onclick="toggleCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <!-- Cart items will be dynamically generated -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <span>Total: ₹<span id="cartTotal">0</span></span>
+                </div>
+                <button class="place-order-btn" onclick="placeOrder()">Place Order</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Confirmation Modal -->
+    <div class="modal-overlay" id="orderModal">
+        <div class="modal">
+            <div class="success-icon">✓</div>
+            <h3>Order Placed Successfully!</h3>
+            <div class="order-details">
+                <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+                <p><strong>Total:</strong> ₹<span id="orderTotal"></span></p>
+                <p><strong>Items:</strong> <span id="orderItems"></span></p>
+                <p><strong>Delivery:</strong> 10 minutes</p>
+            </div>
+            <button class="modal-btn" onclick="closeOrderModal()">Continue Shopping</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
